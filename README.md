@@ -3,6 +3,8 @@
 Демо: конфигуратор стеллажей и их расстановки по зданиям, этажам и рядам.
 Только фронтенд, данные хранятся в `localStorage`, при первом открытии загружается демо-склад.
 
+Полное описание проекта, предметной области и плана реализации — в [docs/PLAN.md](docs/PLAN.md).
+
 Стек: React + TypeScript + Vite, Tailwind CSS v4 + shadcn/ui, Zustand (`persist` + `immer`),
 `@dnd-kit` (drag & drop), `zod` (валидация JSON), `react-router` (`HashRouter`).
 
