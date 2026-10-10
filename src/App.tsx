@@ -1,77 +1,36 @@
-import { useState, type FormEvent } from 'react'
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { useAppStore } from '@/store/useAppStore'
+import { HashRouter, Navigate, Route, Routes } from 'react-router'
+import { AppShell } from '@/components/AppShell'
+import { Toaster } from '@/components/ui/sonner'
+import { TooltipProvider } from '@/components/ui/tooltip'
+import { JsonPage } from '@/pages/JsonPage'
+import { LayoutPlanPage } from '@/pages/layout/LayoutPlanPage'
+import { LayoutTablePage } from '@/pages/layout/LayoutTablePage'
+import { LayoutWizardPage } from '@/pages/layout/LayoutWizardPage'
+import { TemplatesFormPage } from '@/pages/templates/TemplatesFormPage'
+import { TemplatesVisualPage } from '@/pages/templates/TemplatesVisualPage'
+import { ViewerPage } from '@/pages/ViewerPage'
 
-// Временная страница-заглушка: проверяет, что Tailwind, shadcn и localStorage работают.
+// HashRouter: GitHub Pages не умеет отдавать index.html на произвольный путь.
 function App() {
-  const { notes, addNote, removeNote, reset } = useAppStore()
-  const [text, setText] = useState('')
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    const value = text.trim()
-    if (!value) return
-    addNote(value)
-    setText('')
-  }
-
   return (
-    <main className="min-h-screen bg-muted/40 p-6">
-      <div className="mx-auto max-w-xl space-y-6">
-        <h1 className="text-3xl font-semibold tracking-tight">fc-racks</h1>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Проверка каркаса</CardTitle>
-            <CardDescription>
-              Записи сохраняются в localStorage и переживают перезагрузку страницы.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <form onSubmit={handleSubmit} className="flex items-end gap-2">
-              <div className="flex-1 space-y-2">
-                <Label htmlFor="note">Новая запись</Label>
-                <Input
-                  id="note"
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  placeholder="Например: Стеллаж A-1"
-                />
-              </div>
-              <Button type="submit">Добавить</Button>
-            </form>
-
-            {notes.length > 0 && (
-              <ul className="divide-y rounded-md border">
-                {notes.map((note) => (
-                  <li key={note.id} className="flex items-center justify-between px-3 py-2">
-                    <span>{note.text}</span>
-                    <Button variant="ghost" size="sm" onClick={() => removeNote(note.id)}>
-                      Удалить
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            {notes.length > 0 && (
-              <Button variant="outline" onClick={reset}>
-                Очистить всё
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </main>
+    <TooltipProvider>
+      <HashRouter>
+        <Routes>
+          <Route element={<AppShell />}>
+            <Route index element={<Navigate to="/templates" replace />} />
+            <Route path="templates" element={<TemplatesVisualPage />} />
+            <Route path="templates/form" element={<TemplatesFormPage />} />
+            <Route path="layout" element={<LayoutPlanPage />} />
+            <Route path="layout/wizard" element={<LayoutWizardPage />} />
+            <Route path="layout/table" element={<LayoutTablePage />} />
+            <Route path="view/:buildingId?/:floorId?/:rowId?" element={<ViewerPage />} />
+            <Route path="json" element={<JsonPage />} />
+            <Route path="*" element={<Navigate to="/templates" replace />} />
+          </Route>
+        </Routes>
+      </HashRouter>
+      <Toaster position="bottom-right" richColors />
+    </TooltipProvider>
   )
 }
 
