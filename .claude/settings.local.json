@@ -3,5 +3,10 @@
     "allow": [
       "Bash(git)"
     ]
+  },
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
   }
 }
