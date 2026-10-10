@@ -1,8 +1,8 @@
 import { uid } from '@/lib/id'
 import type { Building, RackRun, RackTemplate, WarehouseData } from './types'
 
-function template(name: string, color: string, cells: number[]): RackTemplate {
-  return { id: uid('tpl'), name, color, shelves: cells.map((c) => ({ id: uid('sh'), cells: c })) }
+function template(name: string, cells: number[]): RackTemplate {
+  return { id: uid('tpl'), name, shelves: cells.map((c) => ({ id: uid('sh'), cells: c })) }
 }
 
 function racks(runs: RackRun[]) {
@@ -14,9 +14,9 @@ function racks(runs: RackRun[]) {
 /** Демо-склад: 3 шаблона, 3 здания с разным числом этажей и рядов. */
 export function createDemoData(): WarehouseData {
   // Полки снизу вверх.
-  const a = template('Тип A · пирамида', '#3b82f6', [4, 3, 2])
-  const b = template('Тип B · высокий', '#10b981', [3, 3, 3, 2, 2])
-  const c = template('Тип C · паллетный', '#f59e0b', [2, 2])
+  const a = template('Тип A · пирамида', [4, 3, 2])
+  const b = template('Тип B · высокий', [3, 3, 3, 2, 2])
+  const c = template('Тип C · паллетный', [2, 2])
 
   const buildings: Building[] = [
     {

@@ -19,7 +19,6 @@ import { cellAddress, rackAddress, templateCells } from '@/domain/address'
 import type { Rack } from '@/domain/types'
 import { useWarehouseStore } from '@/store/useWarehouseStore'
 import { RackFacade } from './RackFacade'
-import { TemplateSwatch } from './TemplateSwatch'
 
 /** Позиция стеллажа (индексы с нуля) — для адресов. */
 export type RackLocation = { b: number; f: number; r: number; k: number }
@@ -59,7 +58,6 @@ export function RackDialog({ rack, location, onOpenChange, editable }: Props) {
             <SelectContent>
               {templates.map((t) => (
                 <SelectItem key={t.id} value={t.id}>
-                  <TemplateSwatch color={t.color} />
                   {t.name}
                 </SelectItem>
               ))}
@@ -71,7 +69,6 @@ export function RackDialog({ rack, location, onOpenChange, editable }: Props) {
           <div className="flex justify-center overflow-x-auto py-2">
             <RackFacade
               shelves={template.shelves}
-              color={template.color}
               size="md"
               showCellNumbers
               cellTitle={(p, c) => cellAddress(loc.b, loc.f, loc.r, loc.k, p, c)}

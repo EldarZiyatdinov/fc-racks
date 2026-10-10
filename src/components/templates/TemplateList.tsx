@@ -46,7 +46,7 @@ export function TemplateList({ templates, selectedId, onSelect }: Props) {
                 t.id === selectedId && 'border-primary/40 bg-primary/5',
               )}
             >
-              <RackFacade shelves={t.shelves} color={t.color} size="xs" />
+              <RackFacade shelves={t.shelves} size="xs" />
               <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-medium">{t.name}</div>
                 <div className="text-xs text-muted-foreground">

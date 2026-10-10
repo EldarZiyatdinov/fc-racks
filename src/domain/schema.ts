@@ -11,7 +11,6 @@ export const shelfSchema = z.object({
 export const rackTemplateSchema = z.object({
   id: z.string().min(1),
   name: z.string(),
-  color: z.string().min(1),
   // Полки перечисляются снизу вверх.
   shelves: z.array(shelfSchema).min(1, 'У стеллажа должна быть хотя бы одна полка'),
 })

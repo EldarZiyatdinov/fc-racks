@@ -505,7 +505,7 @@ function PaletteItem({ template }: { template: RackTemplate }) {
         isDragging && 'opacity-50',
       )}
     >
-      <RackFacade shelves={template.shelves} color={template.color} size="xs" />
+      <RackFacade shelves={template.shelves} size="xs" />
       <span className="min-w-0 flex-1 truncate text-xs font-medium">{template.name}</span>
     </div>
   )

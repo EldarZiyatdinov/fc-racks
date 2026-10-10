@@ -29,7 +29,7 @@ function parseFormula(text: string): number[] | null {
 }
 
 /** A3: быстрое создание — пресеты и формула. */
-export function PresetsCard({ templateId, color }: { templateId: string; color: string }) {
+export function PresetsCard({ templateId }: { templateId: string }) {
   const applyPreset = useWarehouseStore((s) => s.applyPreset)
   const [formula, setFormula] = useState('')
 
@@ -58,7 +58,7 @@ export function PresetsCard({ templateId, color }: { templateId: string; color: 
               onClick={() => applyPreset(templateId, p.cells)}
               className="flex flex-col items-center gap-1 rounded-md border p-2 text-[11px] hover:border-primary hover:bg-accent"
             >
-              <RackFacade shelves={toSpec(p.cells)} color={color} size="xs" />
+              <RackFacade shelves={toSpec(p.cells)} size="xs" />
               {p.name}
             </button>
           ))}

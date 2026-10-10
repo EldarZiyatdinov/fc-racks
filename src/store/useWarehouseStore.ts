@@ -3,7 +3,6 @@ import { persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 import { createDemoData } from '@/domain/demo'
 import type {
-  Building,
   Floor,
   Rack,
   RackRun,
@@ -11,23 +10,14 @@ import type {
   Row,
   WarehouseData,
 } from '@/domain/types'
-import { TEMPLATE_COLORS } from '@/domain/types'
 import { uid } from '@/lib/id'
-
-/** Описание структуры для массовой генерации (мастер B2). */
-export type GenerateSpec = {
-  buildings: {
-    name: string
-    floors: { name: string; rows: { name: string; racks: RackRun[] }[] }[]
-  }[]
-}
 
 type Data = Pick<WarehouseData, 'rackTemplates' | 'buildings'>
 
 type Actions = {
   // Шаблоны
   addTemplate: (cells?: number[]) => string
-  updateTemplate: (id: string, patch: Partial<Pick<RackTemplate, 'name' | 'color'>>) => void
+  updateTemplate: (id: string, patch: Partial<Pick<RackTemplate, 'name'>>) => void
   duplicateTemplate: (id: string) => string | undefined
   /** Возвращает число стеллажей, использующих шаблон; удаляет только если 0. */
   removeTemplate: (id: string) => number
@@ -59,7 +49,6 @@ type Actions = {
   fillRow: (rowId: string, runs: RackRun[], mode: 'replace' | 'append') => void
 
   // Массовые операции
-  generate: (spec: GenerateSpec, mode: 'replace' | 'append') => void
   importData: (data: WarehouseData) => void
   loadDemo: () => void
   reset: () => void
@@ -144,7 +133,6 @@ export const useWarehouseStore = create<WarehouseState>()(
           s.rackTemplates.push({
             id,
             name: nextName('Шаблон', s.rackTemplates),
-            color: TEMPLATE_COLORS[s.rackTemplates.length % TEMPLATE_COLORS.length],
             shelves: cells.map((c) => ({ id: uid('sh'), cells: clampCells(c) })),
           })
         })
@@ -163,7 +151,6 @@ export const useWarehouseStore = create<WarehouseState>()(
           s.rackTemplates.push({
             id: newId,
             name: `${src.name} (копия)`,
-            color: src.color,
             shelves: src.shelves.map((sh) => ({ id: uid('sh'), cells: sh.cells })),
           })
         })
@@ -336,26 +323,21 @@ export const useWarehouseStore = create<WarehouseState>()(
           found.row.racks = mode === 'replace' ? racks : [...found.row.racks, ...racks]
         }),
 
-      generate: (spec, mode) =>
-        set((s) => {
-          const created: Building[] = spec.buildings.map((b) => ({
-            id: uid('bld'),
-            name: b.name,
-            floors: b.floors.map((f) => ({
-              id: uid('fl'),
-              name: f.name,
-              rows: f.rows.map((r) => ({ id: uid('row'), name: r.name, racks: makeRacks(r.racks) })),
-            })),
-          }))
-          s.buildings = mode === 'replace' ? created : [...s.buildings, ...created]
-        }),
       importData: (data) => set({ rackTemplates: data.rackTemplates, buildings: data.buildings }),
       loadDemo: () => set(initialData()),
       reset: () => set({ rackTemplates: [], buildings: [] }),
     })),
     {
       name: 'fc-racks',
-      version: 1,
+      version: 2,
+      // v1 → v2: у шаблонов убрано поле color.
+      migrate: (persisted) => {
+        const data = persisted as Data
+        return {
+          ...data,
+          rackTemplates: data.rackTemplates.map(({ id, name, shelves }) => ({ id, name, shelves })),
+        } as WarehouseState
+      },
       partialize: (s): Data => ({ rackTemplates: s.rackTemplates, buildings: s.buildings }),
     },
   ),

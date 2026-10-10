@@ -75,19 +75,37 @@ export function plural(n: number, forms: [string, string, string]) {
   return forms[2]
 }
 
-/** Плоский список всех ячеек с адресами — удобный «развёрнутый» вид для бэкенда. */
+/** Одна ячейка в развёрнутом экспорте. */
+export type ExpandedCell = {
+  /** Человекочитаемый адрес по позициям: З1-Э1-Р1-С1-П1-Я1. */
+  address: string
+  /** Адрес по ID: buildingId/floorId/rowId/rackId/shelfId/номер ячейки. */
+  fullAddressId: string
+  buildingId: string
+  floorId: string
+  rowId: string
+  rackId: string
+  templateId: string
+  /** ID полки в шаблоне (общий для всех стеллажей этого типа). */
+  shelfId: string
+  building: string
+  floor: string
+  row: string
+  template: string
+  /** Номер полки снизу вверх. */
+  shelf: number
+  /** Номер ячейки на полке слева направо. */
+  cell: number
+}
+
+/**
+ * Плоский список всех ячеек — «развёрнутый» вид для бэкенда.
+ * У ячеек нет собственных ID (на полке хранится только их количество),
+ * поэтому ячейка однозначно определяется путём из ID родителей и своим номером.
+ */
 export function expandCells(data: { rackTemplates: RackTemplate[]; buildings: Building[] }) {
   const tpl = templateMap(data.rackTemplates)
-  const cells: {
-    address: string
-    building: string
-    floor: string
-    row: string
-    rackId: string
-    template: string
-    shelf: number
-    cell: number
-  }[] = []
+  const cells: ExpandedCell[] = []
   data.buildings.forEach((b, bi) =>
     b.floors.forEach((f, fi) =>
       f.rows.forEach((r, ri) =>
@@ -97,10 +115,16 @@ export function expandCells(data: { rackTemplates: RackTemplate[]; buildings: Bu
             for (let c = 0; c < s.cells; c++)
               cells.push({
                 address: cellAddress(bi, fi, ri, ki, si, c),
+                fullAddressId: [b.id, f.id, r.id, k.id, s.id, c + 1].join('/'),
+                buildingId: b.id,
+                floorId: f.id,
+                rowId: r.id,
+                rackId: k.id,
+                templateId: t.id,
+                shelfId: s.id,
                 building: b.name,
                 floor: f.name,
                 row: r.name,
-                rackId: k.id,
                 template: t.name,
                 shelf: si + 1,
                 cell: c + 1,

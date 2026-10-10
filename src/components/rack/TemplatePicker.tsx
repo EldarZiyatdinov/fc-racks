@@ -39,7 +39,7 @@ export function TemplatePicker({ children, onSelect, align = 'start' }: Props) {
                   setOpen(false)
                 }}
               >
-                <RackFacade shelves={t.shelves} color={t.color} size="sm" />
+                <RackFacade shelves={t.shelves} size="sm" />
                 <span className="w-full truncate font-medium">{t.name}</span>
                 <span className="text-muted-foreground">{templateCells(t)} яч.</span>
               </button>

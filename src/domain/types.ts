@@ -20,15 +20,3 @@ export type WarehouseData = z.infer<typeof warehouseSchema>
 /** Фрагмент состава ряда: «шаблон × количество». */
 export type RackRun = { templateId: string; count: number }
 
-export const TEMPLATE_COLORS = [
-  '#3b82f6',
-  '#10b981',
-  '#f59e0b',
-  '#ef4444',
-  '#8b5cf6',
-  '#ec4899',
-  '#14b8a6',
-  '#f97316',
-  '#64748b',
-  '#84cc16',
-]

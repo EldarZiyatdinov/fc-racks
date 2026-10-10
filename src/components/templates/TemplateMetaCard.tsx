@@ -6,9 +6,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { templateCells } from '@/domain/address'
-import { TEMPLATE_COLORS, type RackTemplate } from '@/domain/types'
+import type { RackTemplate } from '@/domain/types'
 import { useTemplateUsage } from '@/hooks/useSelectedTemplate'
-import { cn } from '@/lib/utils'
 import { useWarehouseStore } from '@/store/useWarehouseStore'
 
 type Props = { template: RackTemplate; onSelect: (id: string) => void }
@@ -35,24 +34,6 @@ export function TemplateMetaCard({ template, onSelect }: Props) {
           />
         </div>
 
-        <div className="space-y-1.5">
-          <Label>Цвет</Label>
-          <div className="flex flex-wrap gap-1.5">
-            {TEMPLATE_COLORS.map((c) => (
-              <button
-                key={c}
-                type="button"
-                aria-label={c}
-                onClick={() => updateTemplate(template.id, { color: c })}
-                className={cn(
-                  'size-7 rounded-md border-2 border-transparent transition-transform hover:scale-110',
-                  template.color === c && 'border-foreground',
-                )}
-                style={{ backgroundColor: c }}
-              />
-            ))}
-          </div>
-        </div>
 
         <dl className="grid grid-cols-3 gap-2 text-center">
           {[

@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { NumberStepper } from '@/components/NumberStepper'
-import { TemplateSwatch } from '@/components/rack/TemplateSwatch'
+import { RACK_COLOR } from '@/components/rack/RackFacade'
 import type { RackRun } from '@/domain/types'
 import { useWarehouseStore } from '@/store/useWarehouseStore'
 
@@ -17,7 +17,6 @@ type Props = { value: RackRun[]; onChange: (runs: RackRun[]) => void }
 /** Состав ряда: список «шаблон × количество» + полоска-превью. */
 export function RackRunsEditor({ value, onChange }: Props) {
   const templates = useWarehouseStore((s) => s.rackTemplates)
-  const byId = new Map(templates.map((t) => [t.id, t]))
   const update = (i: number, patch: Partial<RackRun>) =>
     onChange(value.map((r, j) => (j === i ? { ...r, ...patch } : r)))
 
@@ -35,7 +34,6 @@ export function RackRunsEditor({ value, onChange }: Props) {
             <SelectContent>
               {templates.map((t) => (
                 <SelectItem key={t.id} value={t.id}>
-                  <TemplateSwatch color={t.color} />
                   {t.name}
                 </SelectItem>
               ))}
@@ -79,7 +77,7 @@ export function RackRunsEditor({ value, onChange }: Props) {
               <div
                 key={`${i}-${j}`}
                 className="h-5 w-3 rounded-[2px]"
-                style={{ backgroundColor: byId.get(run.templateId)?.color ?? '#ccc' }}
+                style={{ backgroundColor: RACK_COLOR }}
               />
             )),
           )}

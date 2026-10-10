@@ -9,8 +9,8 @@ import { TemplateMetaCard } from '@/components/templates/TemplateMetaCard'
 import { useSelectedTemplate } from '@/hooks/useSelectedTemplate'
 import { useWarehouseStore } from '@/store/useWarehouseStore'
 
-/** A1 + A3: визуальный конструктор шаблона стеллажа. */
-export function TemplatesVisualPage() {
+/** Конструктор шаблонов стеллажей: фасад с полками и ячейками, пресеты и формула. */
+export function RacksPage() {
   const { templates, selected, select } = useSelectedTemplate()
   const addTemplate = useWarehouseStore((s) => s.addTemplate)
   const addShelf = useWarehouseStore((s) => s.addShelf)
@@ -40,7 +40,6 @@ export function TemplatesVisualPage() {
 
               <RackFacade
                 shelves={selected.shelves}
-                color={selected.color}
                 size="lg"
                 renderShelfEnd={(shelf) => (
                   <button
@@ -116,7 +115,7 @@ export function TemplatesVisualPage() {
 
           <div className="space-y-4">
             <TemplateMetaCard template={selected} onSelect={select} />
-            <PresetsCard templateId={selected.id} color={selected.color} />
+            <PresetsCard templateId={selected.id} />
           </div>
         </>
       ) : (
@@ -126,7 +125,7 @@ export function TemplatesVisualPage() {
   )
 }
 
-export function EmptyTemplates({ onCreate }: { onCreate: () => void }) {
+function EmptyTemplates({ onCreate }: { onCreate: () => void }) {
   return (
     <Card className="items-center py-16 lg:col-span-2">
       <p className="text-muted-foreground">Нет ни одного шаблона стеллажа.</p>

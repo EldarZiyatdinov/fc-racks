@@ -2,6 +2,9 @@ import type { CSSProperties, ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import type { Shelf } from '@/domain/types'
 
+/** Единый цвет ячеек-коробок. */
+export const RACK_COLOR = '#f97316'
+
 export type FacadeSize = 'xs' | 'sm' | 'md' | 'lg'
 
 const SIZES: Record<
@@ -17,7 +20,6 @@ const SIZES: Record<
 type Props = {
   /** Полки снизу вверх. */
   shelves: Shelf[]
-  color: string
   size?: FacadeSize
   /** Подсказка для ячейки (например, её адрес). Индексы с нуля, полка — снизу. */
   cellTitle?: (shelfIndex: number, cellIndex: number) => string
@@ -30,10 +32,9 @@ type Props = {
   className?: string
 }
 
-/** Фасад стеллажа: стойки, полки-доски и ячейки-«коробки» в цвет шаблона. */
+/** Фасад стеллажа: стойки, полки-доски и ячейки-«коробки». */
 export function RackFacade({
   shelves,
-  color,
   size = 'md',
   cellTitle,
   renderShelfEnd,
@@ -45,10 +46,10 @@ export function RackFacade({
   const post: CSSProperties = { borderLeftWidth: d.post, borderRightWidth: d.post }
   const box: CSSProperties = {
     height: d.cellH,
-    backgroundColor: `color-mix(in oklab, ${color} 22%, white)`,
-    borderColor: `color-mix(in oklab, ${color} 75%, black)`,
+    backgroundColor: `color-mix(in oklab, ${RACK_COLOR} 22%, white)`,
+    borderColor: `color-mix(in oklab, ${RACK_COLOR} 75%, black)`,
   }
-  const tape: CSSProperties = { backgroundColor: `color-mix(in oklab, ${color} 45%, white)` }
+  const tape: CSSProperties = { backgroundColor: `color-mix(in oklab, ${RACK_COLOR} 45%, white)` }
   // Рисуем сверху вниз, а хранятся полки снизу вверх.
   const topDown = shelves.map((shelf, index) => ({ shelf, index })).reverse()
 

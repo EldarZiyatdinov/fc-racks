@@ -11,8 +11,7 @@ import {
 } from '@/components/ui/breadcrumb'
 import { StatsLine } from '@/components/StatsLine'
 import { RackDialog, type RackLocation } from '@/components/rack/RackDialog'
-import { RackFacade } from '@/components/rack/RackFacade'
-import { TemplateSwatch } from '@/components/rack/TemplateSwatch'
+import { RACK_COLOR, RackFacade } from '@/components/rack/RackFacade'
 import {
   buildingStats,
   cellAddress,
@@ -99,8 +98,7 @@ function Legend({ templates }: { templates: RackTemplate[] }) {
   return (
     <div className="ml-auto flex flex-wrap gap-3 text-xs text-muted-foreground">
       {templates.map((t) => (
-        <span key={t.id} className="flex items-center gap-1">
-          <TemplateSwatch color={t.color} />
+        <span key={t.id}>
           {t.name} ({templateCells(t)} яч.)
         </span>
       ))}
@@ -108,8 +106,8 @@ function Legend({ templates }: { templates: RackTemplate[] }) {
   )
 }
 
-/** Мини-план этажа: ряды — полоски, стеллажи — цветные квадратики. */
-function MiniPlan({ floor, tpl }: { floor: Floor; tpl: TplMap }) {
+/** Мини-план этажа: ряды — полоски, стеллажи — квадратики. */
+function MiniPlan({ floor }: { floor: Floor }) {
   return (
     <div className="space-y-1">
       {floor.rows.map((r) => (
@@ -118,7 +116,7 @@ function MiniPlan({ floor, tpl }: { floor: Floor; tpl: TplMap }) {
             <div
               key={k.id}
               className="w-2.5 rounded-[1px]"
-              style={{ backgroundColor: tpl.get(k.templateId)?.color ?? '#ccc' }}
+              style={{ backgroundColor: RACK_COLOR }}
             />
           ))}
           {r.racks.length === 0 && <div className="w-full rounded-[1px] border border-dashed" />}
@@ -154,7 +152,7 @@ function BuildingsView({ buildings, tpl }: { buildings: Building[]; tpl: TplMap 
                   {b.floors.map((f) => (
                     <div key={f.id} className="rounded border bg-white p-1.5">
                       <div className="mb-1 text-[11px] text-muted-foreground">{f.name}</div>
-                      <MiniPlan floor={f} tpl={tpl} />
+                      <MiniPlan floor={f} />
                     </div>
                   ))}
                 </div>
@@ -179,7 +177,7 @@ function BuildingView({ building, tpl }: { building: Building; tpl: TplMap }) {
               <StatsLine stats={floorStats(f, tpl)} show={['rows', 'racks', 'cells']} />
             </CardHeader>
             <CardContent className="px-4">
-              <MiniPlan floor={f} tpl={tpl} />
+              <MiniPlan floor={f} />
             </CardContent>
           </Card>
         </Link>
@@ -225,7 +223,7 @@ function FloorView({
                   const t = tpl.get(k.templateId)
                   return (
                     <div key={k.id} className="flex flex-col items-center gap-0.5">
-                      {t && <RackFacade shelves={t.shelves} color={t.color} size="sm" />}
+                      {t && <RackFacade shelves={t.shelves} size="sm" />}
                       <span className="text-[10px] text-muted-foreground">С{ki + 1}</span>
                     </div>
                   )
@@ -284,7 +282,6 @@ function RowView({
                   {t ? (
                     <RackFacade
                       shelves={t.shelves}
-                      color={t.color}
                       size="md"
                       cellTitle={(p, c) => cellAddress(loc.b, loc.f, loc.r, ki, p, c)}
                     />

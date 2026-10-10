@@ -8,30 +8,15 @@ import { templateMap, totalStats } from '@/domain/address'
 import { cn } from '@/lib/utils'
 import { useWarehouseStore } from '@/store/useWarehouseStore'
 
-const NAV: { title: string; links: { to: string; label: string; end?: boolean }[] }[] = [
-  {
-    title: 'Шаблоны',
-    links: [
-      { to: '/templates', label: 'Визуально', end: true },
-      { to: '/templates/form', label: 'Форма' },
-    ],
-  },
-  {
-    title: 'Расстановка',
-    links: [
-      { to: '/layout', label: 'План', end: true },
-      { to: '/layout/wizard', label: 'Мастер' },
-      { to: '/layout/table', label: 'Таблица' },
-    ],
-  },
-  {
-    title: 'Результат',
-    links: [
-      { to: '/view', label: 'Просмотр' },
-      { to: '/json', label: 'JSON' },
-    ],
-  },
+const NAV = [
+  { to: '/racks', label: 'Стеллажи' },
+  { to: '/layout', label: 'План' },
+  { to: '/view', label: 'Просмотр' },
+  { to: '/json', label: 'JSON' },
 ]
+
+/** Ширина контента: 1536px (брейкпоинт Tailwind 2xl), по центру экрана. */
+const CONTAINER = 'mx-auto w-full max-w-screen-2xl'
 
 export function AppShell() {
   const buildings = useWarehouseStore((s) => s.buildings)
@@ -43,34 +28,26 @@ export function AppShell() {
   return (
     <div className="flex min-h-screen flex-col bg-muted/40">
       <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur">
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 px-4 py-2">
+        <div className={cn(CONTAINER, 'flex flex-wrap items-center gap-x-6 gap-y-2 px-4 py-2')}>
           <div className="flex items-center gap-2 font-semibold">
             <WarehouseIcon className="size-5 text-primary" />
             fc-racks
           </div>
 
-          <nav className="flex flex-wrap items-center gap-4">
-            {NAV.map((group) => (
-              <div key={group.title} className="flex items-center gap-1">
-                <span className="mr-1 text-xs tracking-wide text-muted-foreground uppercase">
-                  {group.title}
-                </span>
-                {group.links.map((l) => (
-                  <NavLink
-                    key={l.to}
-                    to={l.to}
-                    end={l.end}
-                    className={({ isActive }) =>
-                      cn(
-                        'rounded-md px-2.5 py-1 text-sm transition-colors hover:bg-accent',
-                        isActive && 'bg-primary text-primary-foreground hover:bg-primary/90',
-                      )
-                    }
-                  >
-                    {l.label}
-                  </NavLink>
-                ))}
-              </div>
+          <nav className="flex flex-wrap items-center gap-1">
+            {NAV.map((l) => (
+              <NavLink
+                key={l.to}
+                to={l.to}
+                className={({ isActive }) =>
+                  cn(
+                    'rounded-md px-3 py-1 text-sm transition-colors hover:bg-accent',
+                    isActive && 'bg-primary text-primary-foreground hover:bg-primary/90',
+                  )
+                }
+              >
+                {l.label}
+              </NavLink>
             ))}
           </nav>
 
@@ -111,7 +88,7 @@ export function AppShell() {
         </div>
       </header>
 
-      <main className="flex-1 p-4">
+      <main className={cn(CONTAINER, 'flex-1 p-4')}>
         <Outlet />
       </main>
     </div>

@@ -86,7 +86,7 @@ export function JsonPage() {
             {(
               [
                 ['data', json, 'fc-racks.json', 'Иерархия зданий + шаблоны. Из этого JSON интерфейс восстанавливается целиком.'],
-                ['cells', expanded, 'fc-racks-cells.json', 'Плоский список всех ячеек с адресами — только для чтения (например, для бэкенда/WMS).'],
+                ['cells', expanded, 'fc-racks-cells.json', 'Плоский список всех ячеек — только для чтения (например, для бэкенда/WMS). address — адрес по позициям, fullAddressId — по ID: здание/этаж/ряд/стеллаж/полка/номер ячейки; ID каждого уровня — отдельными полями.'],
               ] as const
             ).map(([value, content, file, hint]) => (
               <TabsContent key={value} value={value} className="space-y-2">
